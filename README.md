@@ -1,2 +1,2 @@
-# Advance-Algorithm
-Advance Algorithm Assignment Q1-3
+# Advanced-Algorithm
+Advanced Algorithm Assignment Q1-3
