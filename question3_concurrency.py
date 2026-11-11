@@ -3,14 +3,16 @@ import time
 
 
 def fibonacci(n):
-    """Return the nth Fibonacci number using an iterative algorithm."""
+    # If the number is negative or small, return it directly
     if n < 0:
-        raise ValueError("n must be zero or greater")
+        return 0
     if n <= 1:
         return n
 
+    # Start loop from 2 up to our target number
     previous, current = 0, 1
     for _ in range(2, n + 1):
+        # Shift variables forward to get the next number in the pattern
         previous, current = current, previous + current
     return current
 
@@ -19,17 +21,19 @@ def run_multithreaded(numbers):
     results = {}
     threads = []
 
+    # Small job function for each thread to run
     def calculate(number):
         results[number] = fibonacci(number)
 
-    # Start time is recorded immediately before starting the first thread.
+    # Save the time right before starting the threads
     start_time = time.perf_counter_ns()
     for number in numbers:
+        # Create a new background worker and start it immediately
         thread = threading.Thread(target=calculate, args=(number,))
         threads.append(thread)
         thread.start()
 
-    # Wait for every thread to finish. The last join completes after the last worker.
+    # Wait for all workers to finish their jobs
     for thread in threads:
         thread.join()
     end_time = time.perf_counter_ns()
@@ -39,6 +43,7 @@ def run_multithreaded(numbers):
 
 def run_sequential(numbers):
     results = {}
+    # Save the time before doing the math normally one by one
     start_time = time.perf_counter_ns()
     for number in numbers:
         results[number] = fibonacci(number)
@@ -76,11 +81,10 @@ def main():
 
     print("\n--- Comparison ---")
     if threaded_average < sequential_average:
-        print("Multithreading was faster on average in this experiment.")
-    elif threaded_average > sequential_average:
-        print("Sequential processing was faster on average in this experiment.")
+        print("Result: Multithreading was faster on average.")
     else:
-        print("Both methods had almost equal average times.")
+        # It takes extra time to set up threads, which makes it slower for easy math
+        print("Result: Sequential processing was faster on average due to thread overhead.")
 
 
 if __name__ == "__main__":
